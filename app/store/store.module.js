@@ -29,7 +29,7 @@ var StoreModule = (function () {
                 cartDetail_component_1.CartDetailComponent,
                 checkout_component_1.CheckoutComponent
             ],
-            exports: [store_component_1.StoreComponent]
+            exports: [store_component_1.StoreComponent, cartDetail_component_1.CartDetailComponent, checkout_component_1.CheckoutComponent]
         }), 
         __metadata('design:paramtypes', [])
     ], StoreModule);

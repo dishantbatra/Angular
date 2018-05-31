@@ -34,6 +34,9 @@ var ProductRepository = (function () {
     ProductRepository.prototype.getCategories = function () {
         return this.categories;
     };
+    ProductRepository.prototype.saveOrder = function (order) {
+        return this.dataSource.saveOrder(order);
+    };
     ProductRepository = __decorate([
         core_1.Injectable(), 
         __metadata('design:paramtypes', [static_datasource_1.StaticDataSource])
