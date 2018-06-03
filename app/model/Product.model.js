@@ -1,5 +1,4 @@
-"use strict";
-var Product = (function () {
+export var Product = (function () {
     function Product(id, name, category, description, price) {
         this.id = id;
         this.name = name;
@@ -9,4 +8,3 @@ var Product = (function () {
     }
     return Product;
 }());
-exports.Product = Product;

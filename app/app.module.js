@@ -1,60 +1,80 @@
-"use strict";
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var core_1 = require("@angular/core");
-var platform_browser_1 = require("@angular/platform-browser");
-var app_component_1 = require("./app.component");
-var store_module_1 = require("./store/store.module");
-var store_component_1 = require("./store/store.component");
-var checkout_component_1 = require("./store/checkout.component");
-var cartDetail_component_1 = require("./store/cartDetail.component");
-var router_1 = require("@angular/router");
-var storeFirst_guard_1 = require("./guards/storeFirst.guard");
-var AppModule = (function () {
+import { NgModule } from "@angular/core";
+import { BrowserModule } from "@angular/platform-browser";
+import { AppComponent } from "./app.component";
+import { StoreModule } from "./store/store.module";
+import { StoreComponent } from "./store/store.component";
+import { CheckoutComponent } from "./store/checkout.component";
+import { CartDetailComponent } from "./store/cartDetail.component";
+import { RouterModule } from "@angular/router";
+import { AdminModule } from "./admin/admin.module";
+import { AuthComponent } from "./admin/auth.component";
+import { AdminComponent } from "./admin/admin.component";
+import { ProductTableComponent } from "./admin/productTable.component";
+import { ProductEditorComponent } from "./admin/productEditor.component";
+import { OrderTableComponent } from "./admin/orderTable.component";
+import { StoreFirstGuard } from "./guards/storeFirst.guard";
+import { AuthGuard } from "./guards/auth.guard";
+export var AppModule = (function () {
     function AppModule() {
     }
-    AppModule = __decorate([
-        core_1.NgModule({
-            imports: [
-                platform_browser_1.BrowserModule,
-                store_module_1.StoreModule,
-                router_1.RouterModule.forRoot([
-                    {
-                        path: "store",
-                        component: store_component_1.StoreComponent,
-                        canActivate: [storeFirst_guard_1.StoreFirstGuard]
-                    },
-                    {
-                        path: "cart",
-                        component: cartDetail_component_1.CartDetailComponent,
-                        canActivate: [storeFirst_guard_1.StoreFirstGuard]
-                    },
-                    {
-                        path: "checkout",
-                        component: checkout_component_1.CheckoutComponent,
-                        canActivate: [storeFirst_guard_1.StoreFirstGuard]
-                    },
-                    {
-                        path: "admin",
-                        loadChildren: "app/admin/admin.module#AdminModule",
-                        canActivate: [storeFirst_guard_1.StoreFirstGuard]
-                    },
-                    { path: "**", redirectTo: "/store" }
-                ])
-            ],
-            providers: [storeFirst_guard_1.StoreFirstGuard],
-            declarations: [app_component_1.AppComponent],
-            bootstrap: [app_component_1.AppComponent]
-        }), 
-        __metadata('design:paramtypes', [])
-    ], AppModule);
+    AppModule.decorators = [
+        { type: NgModule, args: [{
+                    imports: [
+                        BrowserModule,
+                        StoreModule,
+                        AdminModule,
+                        RouterModule.forRoot([
+                            {
+                                path: "store",
+                                component: StoreComponent,
+                                canActivate: [StoreFirstGuard]
+                            },
+                            {
+                                path: "cart",
+                                component: CartDetailComponent,
+                                canActivate: [StoreFirstGuard]
+                            },
+                            {
+                                path: "checkout",
+                                component: CheckoutComponent,
+                                canActivate: [StoreFirstGuard]
+                            },
+                            {
+                                path: "admin",
+                                children: [
+                                    { path: "auth", component: AuthComponent },
+                                    {
+                                        path: "main",
+                                        component: AdminComponent,
+                                        canActivate: [AuthGuard],
+                                        children: [
+                                            {
+                                                path: "products/:mode/:id",
+                                                component: ProductEditorComponent
+                                            },
+                                            {
+                                                path: "products/:mode",
+                                                component: ProductEditorComponent
+                                            },
+                                            { path: "products", component: ProductTableComponent },
+                                            { path: "orders", component: OrderTableComponent },
+                                            { path: "**", redirectTo: "products" }
+                                        ]
+                                    },
+                                    { path: "**", redirectTo: "auth" }
+                                ],
+                                //loadChildren: "app/admin/admin.module#AdminModule",
+                                canActivate: [StoreFirstGuard]
+                            },
+                            { path: "**", redirectTo: "/store" }
+                        ])
+                    ],
+                    providers: [StoreFirstGuard],
+                    declarations: [AppComponent],
+                    bootstrap: [AppComponent]
+                },] },
+    ];
+    /** @nocollapse */
+    AppModule.ctorParameters = [];
     return AppModule;
 }());
-exports.AppModule = AppModule;

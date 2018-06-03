@@ -6,12 +6,19 @@ import { StoreComponent } from "./store/store.component";
 import { CheckoutComponent } from "./store/checkout.component";
 import { CartDetailComponent } from "./store/cartDetail.component";
 import { RouterModule } from "@angular/router";
+import { AdminModule } from "./admin/admin.module";
+import { AuthComponent } from "./admin/auth.component";
+import { AdminComponent } from "./admin/admin.component";
+import { ProductTableComponent } from "./admin/productTable.component";
+import { ProductEditorComponent } from "./admin/productEditor.component";
+import { OrderTableComponent } from "./admin/orderTable.component";
 import { StoreFirstGuard } from "./guards/storeFirst.guard";
-
+import { AuthGuard } from "./guards/auth.guard";
 @NgModule({
   imports: [
     BrowserModule,
     StoreModule,
+    AdminModule,
     RouterModule.forRoot([
       {
         path: "store",
@@ -30,7 +37,29 @@ import { StoreFirstGuard } from "./guards/storeFirst.guard";
       },
       {
         path: "admin",
-        loadChildren: "app/admin/admin.module#AdminModule",
+        children: [
+          { path: "auth", component: AuthComponent },
+          {
+            path: "main",
+            component: AdminComponent,
+            canActivate: [AuthGuard],
+            children: [
+              {
+                path: "products/:mode/:id",
+                component: ProductEditorComponent
+              },
+              {
+                path: "products/:mode",
+                component: ProductEditorComponent
+              },
+              { path: "products", component: ProductTableComponent },
+              { path: "orders", component: OrderTableComponent },
+              { path: "**", redirectTo: "products" }
+            ]
+          },
+          { path: "**", redirectTo: "auth" }
+        ],
+        //loadChildren: "app/admin/admin.module#AdminModule",
         canActivate: [StoreFirstGuard]
       },
       { path: "**", redirectTo: "/store" }
